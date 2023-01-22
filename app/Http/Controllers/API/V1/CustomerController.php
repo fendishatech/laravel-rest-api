@@ -9,6 +9,7 @@ use App\Http\Resources\V1\CustomerCollection;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Filters\V1\CustomersFilter;
 use Illuminate\Http\Request;
 // use Illuminate\Support\Facades\Request;
 
@@ -21,24 +22,18 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $filter = new CustomerQuery();
-        $queryItems = $filter->transform($request); // [[ 'column' , 'operator' , 'value']]
+        $filter = new CustomersFilter();
+        $filterItems = $filter->transform($request); // [[ 'column' , 'operator' , 'value']]
 
-        if(count($queryItems) == 0) {
-            return new CustomerCollection(Customer::paginate());
-        } else {
-            return new CustomerCollection(Customer::where($queryItems)->paginate());
+        $includeInvoices = $request->query('includeInvoices');
+
+        $customers = Customer::where($filterItems);
+
+        if($includeInvoices) {
+            $customers = $customers->with('invoices');
         }
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return new CustomerCollection($customers->paginate()->appends($request->query()));
     }
 
     /**
@@ -58,20 +53,14 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function show(Customer $customer)
+    public function show(Customer $customer, Request $request)
     {
-        return new CustomerResource($customer);
-    }
+        $includeInvoices = $request->query('includeInvoices');
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Customer $customer)
-    {
-        //
+        if($includeInvoices) {
+            return new CustomerResource($customer->loadMissing('invoices'));
+        }
+        return new CustomerResource($customer);
     }
 
     /**
