@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\V1;
 
+
+use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
@@ -11,11 +13,15 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JSONResponse
      */
     public function index()
     {
-        //
+        $customers = Customer::all();
+        return response()->json([
+            'success' => true,
+            'customers' => $customers
+        ]) ;
     }
 
     /**
