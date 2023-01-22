@@ -10,7 +10,18 @@ class Customer extends Model
 {
     use HasFactory;
 
-    public function invoices () {
+    protected $fillable = [
+        'name',
+        'type',
+        'email',
+        'city',
+        'address',
+        'state',
+        'postal_code',
+    ];
+
+    public function invoices()
+    {
         return $this->hasMany(Invoice::class);
     }
 }

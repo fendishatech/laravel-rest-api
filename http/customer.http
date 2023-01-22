@@ -1,0 +1,13 @@
+###
+POST http://localhost:8000/api/v1/customers/ HTTP/1.1
+content-type: application/json
+
+{
+    "name" : "Kidus taye",
+    "type" : "",
+    "email" : "stg@mail.com",
+    "address" : "543 Jedediah River",
+    "city" : "Addis Ababa",
+    "state" : "Florida",
+    "postalCode" : "1000"
+}
