@@ -9,6 +9,8 @@ use App\Http\Resources\V1\CustomerCollection;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\Request;
 
 class CustomerController extends Controller
 {
@@ -17,9 +19,16 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\JSONResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        return new CustomerCollection(Customer::paginate());
+        $filter = new CustomerQuery();
+        $queryItems = $filter->transform($request); // [[ 'column' , 'operator' , 'value']]
+
+        if(count($queryItems) == 0) {
+            return new CustomerCollection(Customer::paginate());
+        } else {
+            return new CustomerCollection(Customer::where($queryItems)->paginate());
+        }
     }
 
     /**
