@@ -16,11 +16,11 @@ class InvoiceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'customer_id' => $this->customer_id,
+            'customerId' => $this->customer_id,
             'amount' => $this->amount,
             'status' => $this->status,
-            'billedDate' => $this->billedDate,
-            'paidDate' => $this->paidDate,
+            'billedDate' => $this->billed_date,
+            'paidDate' => $this->paid_date,
         ];
     }
 }

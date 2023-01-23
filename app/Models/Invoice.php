@@ -13,8 +13,8 @@ class Invoice extends Model
             'customer_id',
             'amount',
             'status',
-            'billedDate',
-            'paidDate',
+            'billed_date',
+            'paid_date',
     ];
     public function customer () {
         return $this->belongsTo(Customer::class);
